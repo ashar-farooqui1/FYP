@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\D data\\\\Github\\\\asl-translator\\\\model\\\\\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(dir \"C:\\\\D data\\\\Github\\\\asl-translator\" -Force | Where-Object { $_.Name -ne \"venv\" -and $_.Name -ne \"data\" } | Select-Object Name, PSIsContainer; Write-Host \"---backend---\"; dir \"C:\\\\D data\\\\Github\\\\asl-translator\\\\backend\" | Select-Object Name; Write-Host \"---frontend---\"; dir \"C:\\\\D data\\\\Github\\\\asl-translator\\\\frontend\" | Select-Object Name; Write-Host \"---model---\"; dir \"C:\\\\D data\\\\Github\\\\asl-translator\\\\model\" | Select-Object Name; Write-Host \"---scripts---\"; dir \"C:\\\\D data\\\\Github\\\\asl-translator\\\\scripts\" | Select-Object Name)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-Item \"C:\\\\D data\\\\Github\\\\asl-translator\\\\model\\\\saved_lstm\\\\asl_lstm_model.keras\" | Select-Object LastWriteTime, @{N=\"Size_MB\";E={[math]::Round\\($_.Length/1MB,1\\)}}; Get-Content \"C:\\\\D data\\\\Github\\\\asl-translator\\\\model\\\\saved_lstm\\\\meta.json\")",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(ls \"C:\\\\D data\\\\Github\\\\asl-translator\\\\data\\\\landmarks\\\\train\" | Select-Object -First 5; \\(ls \"C:\\\\D data\\\\Github\\\\asl-translator\\\\data\\\\landmarks\\\\train\"\\).Count)",
+      "PowerShell($hist = Get-Content \"C:\\\\D data\\\\Github\\\\asl-translator\\\\model\\\\saved_lstm\\\\training_history.json\" | ConvertFrom-Json; $epochs = $hist.val_accuracy.Count; \"Total epochs: $epochs\"; \"Final val_acc: $\\($hist.val_accuracy[-1]\\)\"; \"Final train_acc: $\\($hist.accuracy[-1]\\)\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\D data\\\\Github\\\\asl-translator\" -Recurse -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(Sort-Object FullName)",
+      "Bash(Format-Table -AutoSize)",
+      "Bash(Select-Object FullName, Length)"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "num_classes": 20,
+  "seq_len": 30,
+  "landmark_dim": 126,
+  "best_val_acc": 0.8695651888847351,
+  "test_accuracy": 0.7916666865348816,
+  "test_top5_acc": 0.9583333134651184
+}

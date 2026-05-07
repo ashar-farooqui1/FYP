@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASL Translator — FYP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ── Header ── -->
+    <header class="header">
+      <div class="header__inner">
+        <div class="header__brand">
+          <div class="header__logo">🤟</div>
+          <div class="header__brand-text">
+            <h1 class="header__title">ASL Translator</h1>
+            <p class="header__subtitle">Real-time Sign Language Recognition · MediaPipe + BiLSTM</p>
+          </div>
+        </div>
+        <div class="header__status">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Connecting…</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Mode Tabs ── -->
+    <div class="mode-bar">
+      <div class="mode-bar__inner">
+        <button class="mode-tab mode-tab--active" id="tabTranslate">
+          📷&nbsp; Camera → Text
+        </button>
+        <button class="mode-tab" id="tabVoice">
+          🎙&nbsp; Voice → Sign
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MODE 1 — Camera → Text (default)
+    ═══════════════════════════════════════════════════════════ -->
+    <main class="main" id="translateMode">
+
+      <!-- Camera panel -->
+      <section class="camera-panel">
+        <div class="camera-wrap">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+
+          <div class="buffer-bar">
+            <div class="buffer-bar__track">
+              <div class="buffer-bar__fill" id="bufferFill"></div>
+            </div>
+            <span class="buffer-bar__label" id="bufferLabel">Collecting frames…</span>
+          </div>
+
+          <div class="hand-badge" id="handBadge">
+            <span id="handIcon">✋</span>
+            <span id="handText">No hand</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn--primary" id="startBtn">▶ Start</button>
+          <button class="btn btn--secondary" id="resetBtn">↺ Reset</button>
+          <button class="btn btn--ghost" id="muteBtn">🔊 Voice On</button>
+        </div>
+      </section>
+
+      <!-- Results panel -->
+      <section class="results-panel">
+
+        <div class="card prediction-card">
+          <p class="card__label">Detected Sign</p>
+          <h2 class="prediction-card__word" id="predWord">—</h2>
+          <div class="confidence-wrap">
+            <div class="confidence-bar">
+              <div class="confidence-bar__fill" id="confBar"></div>
+            </div>
+            <span class="confidence-pct" id="confPct">0%</span>
+          </div>
+        </div>
+
+        <div class="card top3-card">
+          <p class="card__label">Alternatives</p>
+          <ul class="top3-list" id="top3List">
+            <li class="top3-item top3-item--empty">—</li>
+          </ul>
+        </div>
+
+        <div class="card sentence-card">
+          <p class="card__label">Sentence Builder</p>
+          <div class="sentence-display" id="sentenceDisplay">
+            <span class="sentence-placeholder">Signs will appear here…</span>
+          </div>
+          <div class="sentence-controls">
+            <button class="btn btn--sm btn--secondary" id="addWordBtn">+ Add Word</button>
+            <button class="btn btn--sm btn--ghost" id="speakBtn">🔊 Speak</button>
+            <button class="btn btn--sm btn--danger" id="clearSentBtn">✕ Clear</button>
+          </div>
+        </div>
+
+        <div class="card classes-card">
+          <p class="card__label">Supported Signs&ensp;<span class="card__count" id="classCount">0</span></p>
+          <div class="classes-grid" id="classesGrid"></div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MODE 2 — Voice → Sign
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="voice-mode" id="voiceMode" hidden>
+      <div class="voice-layout">
+
+        <!-- Left: Input -->
+        <div class="card voice-input-card">
+
+          <div class="mic-section">
+            <button class="mic-btn" id="micBtn" title="Click to speak">
+              <span class="mic-icon">🎙</span>
+            </button>
+            <p class="mic-hint" id="micHint">Click the mic and say an ASL word</p>
+          </div>
+
+          <div class="voice-word-section">
+            <p class="card__label">Recognized Word</p>
+            <div class="voice-word" id="voiceWord">—</div>
+          </div>
+
+          <div class="voice-text-section">
+            <p class="card__label" style="margin-top:4px">Or type a word</p>
+            <div class="voice-text-row">
+              <input class="voice-text-input" id="voiceTextInput"
+                     type="text" placeholder="e.g. book, drink, help…"
+                     autocomplete="off" spellcheck="false" />
+              <button class="btn btn--sm btn--primary" id="voiceTextBtn">Show</button>
+            </div>
+          </div>
+
+          <div class="voice-chips-section">
+            <p class="card__label" style="margin-top:4px">Quick select</p>
+            <div class="classes-grid" id="voiceChipsGrid"></div>
+          </div>
+
+        </div>
+
+        <!-- Right: Sign canvas -->
+        <div class="card sign-card">
+          <p class="card__label" id="signCardLabel">Sign Animation</p>
+
+          <div class="sign-canvas-wrap">
+            <canvas id="signCanvas" width="500" height="500"></canvas>
+            <div class="sign-empty" id="signEmpty">Speak or select a word to see its sign</div>
+          </div>
+
+          <div class="sign-controls">
+            <button class="btn btn--sm btn--secondary" id="playBtn" disabled>▶ Play</button>
+            <input class="frame-slider" id="frameSlider" type="range"
+                   min="0" max="29" value="0" disabled />
+            <span class="frame-count" id="frameCount">— / —</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer class="footer">
+      <span>Final Year Project &nbsp;·&nbsp; ASL Translator &nbsp;·&nbsp; MediaPipe + BiLSTM</span>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

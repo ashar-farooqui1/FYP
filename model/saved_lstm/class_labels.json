@@ -1,0 +1,22 @@
+{
+  "all": 0,
+  "before": 1,
+  "black": 2,
+  "book": 3,
+  "candy": 4,
+  "chair": 5,
+  "clothes": 6,
+  "computer": 7,
+  "cousin": 8,
+  "deaf": 9,
+  "drink": 10,
+  "fine": 11,
+  "go": 12,
+  "help": 13,
+  "no": 14,
+  "thin": 15,
+  "walk": 16,
+  "who": 17,
+  "year": 18,
+  "yes": 19
+}

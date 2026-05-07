@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment / secrets
+.env
+
+# Data (large files — download via scripts/download_dataset.py)
+data/raw/
+data/processed/
+data/landmarks/
+
+# Model weights (large binaries)
+model/saved/
+model/saved_lstm/*.keras
+model/saved_lstm/best_model.keras
+model/saved_lstm/*.csv
+
+# Logs & evaluation outputs
+*.log
+*.csv
+model/saved_lstm/evaluation/
+model/saved/tensorboard/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
